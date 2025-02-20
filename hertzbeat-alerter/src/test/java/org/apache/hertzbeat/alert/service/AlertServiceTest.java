@@ -18,28 +18,24 @@
 package org.apache.hertzbeat.alert.service;
 
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
-
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import org.apache.hertzbeat.alert.dao.AlertDao;
-import org.apache.hertzbeat.alert.dto.AlertPriorityNum;
-import org.apache.hertzbeat.alert.dto.TenCloudAlertReport;
-import org.apache.hertzbeat.alert.reduce.AlarmCommonReduce;
-import org.apache.hertzbeat.alert.service.impl.AlertServiceImpl;
-import org.apache.hertzbeat.common.entity.alerter.Alert;
-import org.apache.hertzbeat.common.entity.dto.AlertReport;
-import org.apache.hertzbeat.common.util.JsonUtil;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+@@ -38,11 +42,7 @@
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import org.mockito.Mockito;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -71,7 +67,6 @@ class AlertServiceTest {
 
     @Test
     void getAlerts() {
- 
     }
 
 
