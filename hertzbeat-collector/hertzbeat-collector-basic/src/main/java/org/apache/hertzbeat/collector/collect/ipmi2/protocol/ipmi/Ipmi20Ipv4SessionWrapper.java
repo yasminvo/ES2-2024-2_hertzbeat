@@ -37,6 +37,8 @@ import org.apache.hertzbeat.collector.collect.ipmi2.utils.ByteOrderUtils;
 public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
 
     private static final IpmiSessionAuthenticationType AUTH_TYPE = IpmiSessionAuthenticationType.RMCPP;
+    private static final String CONFIDENTIALITY_ALGORITHM_NOT_SUPPORT = "Such confidentiality algorithm not support.";
+    private static final String INTEGRITY_ALGORITHM_NOT_SUPPORT = "Such integrity algorithm not support.";
 
     @Override
     public int getWireLength(IpmiPacketContext context) {
@@ -47,7 +49,7 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
         if (!IpmiConfidentialityCode.NONE.equals(confidentialityCode)) {
             IpmiConfidentiality confidentiality = confidentialityCode.newIpmiConfidentiality();
             if (confidentiality == null) {
-                throw new UnsupportedOperationException("Such confidentiality algorithm not support");
+                throw new UnsupportedOperationException(CONFIDENTIALITY_ALGORITHM_NOT_SUPPORT);
             }
             encryptDataLength = confidentiality.getEncryptedLength(rawDataLength);
         }
@@ -57,7 +59,7 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
             int padLength = 4 - (12 + encryptDataLength + 1 + 1) % 4;
             IpmiIntegrity ipmiIntegrity = integrityCode.newIpmiIntegrity();
             if (ipmiIntegrity == null) {
-                throw new UnsupportedOperationException("Such integrity algorithm not support");
+                throw new UnsupportedOperationException(INTEGRITY_ALGORITHM_NOT_SUPPORT);
             }
             integrityDataLength = padLength + 1 + 1 + ipmiIntegrity.getHashLength();
         }
@@ -115,7 +117,7 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
         IpmiConfidentiality confidentiality = confidentialityCode.newIpmiConfidentiality();
         int rawDataLength = payload.getWireLength(context);
         if (confidentiality == null) {
-            throw new UnsupportedOperationException("Such confidentiality algorithm not support");
+            throw new UnsupportedOperationException(CONFIDENTIALITY_ALGORITHM_NOT_SUPPORT);
         }
         int encryptDataLength = confidentiality.getEncryptedLength(rawDataLength);
         ByteOrderUtils.writeLeChar(buffer, (char) encryptDataLength);
@@ -142,7 +144,7 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
                 integrityInput.limit(buffer.position());
                 IpmiIntegrity ipmiIntegrity = integrityCode.newIpmiIntegrity();
                 if (ipmiIntegrity == null) {
-                    throw new UnsupportedOperationException("Such integrity algorithm not support");
+                    throw new UnsupportedOperationException(INTEGRITY_ALGORITHM_NOT_SUPPORT);
                 }
                 ipmiIntegrity.setKey(session.getK1());
                 ipmiIntegrity.setData(ByteOrderUtils.readBytes(integrityInput, integrityInput.limit() - integrityInput.position()));
@@ -184,7 +186,7 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
                 IpmiConfidentialityCode confidentialityCode = getConfidentialityCode(session);
                 IpmiConfidentiality confidentiality = confidentialityCode.newIpmiConfidentiality();
                 if (confidentiality == null) {
-                    throw new UnsupportedOperationException("Such confidentiality algorithm not support");
+                    throw new UnsupportedOperationException(CONFIDENTIALITY_ALGORITHM_NOT_SUPPORT);
                 }
                 decryptedBuffer = confidentiality.decrypt(session, encryptedBuffer);
             } else {
@@ -202,7 +204,7 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
                 IpmiIntegrityCode ipmiIntegrityCode = session.getIntegrityAlgorithm();
                 IpmiIntegrity ipmiIntegrity = ipmiIntegrityCode.newIpmiIntegrity();
                 if (ipmiIntegrity == null) {
-                    throw new UnsupportedOperationException("Such integrity algorithm not support");
+                    throw new UnsupportedOperationException(INTEGRITY_ALGORITHM_NOT_SUPPORT);
                 }
                 ipmiIntegrity.setKey(session.getK1());
                 ipmiIntegrity.setData(ByteOrderUtils.readBytes(integrityInput, integrityInput.limit() - integrityInput.position()));
@@ -217,3 +219,4 @@ public class Ipmi20Ipv4SessionWrapper extends AbstractIpmiSessionWrapper{
         }
     }
 }
+
