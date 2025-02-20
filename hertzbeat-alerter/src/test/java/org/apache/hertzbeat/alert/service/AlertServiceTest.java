@@ -18,13 +18,9 @@
 package org.apache.hertzbeat.alert.service;
 
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -42,7 +38,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 
 /**
  * Test case for {@link AlertService}
@@ -71,8 +71,34 @@ class AlertServiceTest {
 
     @Test
     void getAlerts() {
-        //TESTE
+        // Parâmetros de entrada
+        List<Long> alarmIds = List.of(1L, 2L, 3L);
+        Long monitorId = 1L;
+        Byte priority = 1;
+        Byte status = 0;
+        String content = "Test content";
+        String sort = "priority";
+        String order = "desc";
+        int pageIndex = 0;
+        int pageSize = 10;
+
+        // Cria um mock para Page<Alert>
+        Page<Alert> mockPage = Mockito.mock(Page.class);
+        // Configura o comportamento do DAO: findAll retorna o mockPage
+        when(alertDao.findAll(any(Specification.class), any(PageRequest.class))).thenReturn(mockPage);
+
+        // Chama o método a ser testado
+        Page<Alert> result = alertService.getAlerts(alarmIds, monitorId, priority, status, content, sort, order, pageIndex, pageSize);
+
+        // Verifica se o resultado não é nulo e se é o mesmo objeto retornado pelo DAO
+        assertNotNull(result);
+        assertEquals(mockPage, result);
+
+        // Verifica que o método findAll foi invocado corretamente
+        verify(alertDao, times(1)).findAll(any(Specification.class), any(PageRequest.class));
     }
+
+
 
     @Test
     void deleteAlerts() {
@@ -137,3 +163,4 @@ class AlertServiceTest {
 
     }
 }
+
