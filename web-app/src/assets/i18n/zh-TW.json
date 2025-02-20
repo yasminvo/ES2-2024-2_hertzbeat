@@ -608,6 +608,7 @@
   "settings.system-config.locale.zh_CN": "簡體中文(zh_CN)",
   "settings.system-config.locale.zh_TW": "繁體中文(zh_TW)",
   "settings.system-config.locale.en_US": "英語(en_US)",
+  "settings.system-config.locale.pt_BR": "Português(pt_BR)",
   "settings.system-config.timezone": "系統時區",
   "settings.system-config.theme": "系統主題",
   "settings.system-config.theme.default": "淺色主題",
