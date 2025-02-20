@@ -50,6 +50,7 @@ public class AlertDefineExcelImExportServiceTest {
     private AlertDefineExcelImExportServiceImpl alertDefineExcelImExportService;
 
     private Workbook workbook;
+    private Sheet sheet;
 
     @BeforeEach
     void setUp() throws IOException {
