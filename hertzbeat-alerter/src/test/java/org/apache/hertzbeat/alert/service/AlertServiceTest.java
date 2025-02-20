@@ -18,24 +18,28 @@
 package org.apache.hertzbeat.alert.service;
 
 
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.mockito.Mockito.any;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-@@ -38,11 +42,7 @@
+import java.util.List;
+import org.apache.hertzbeat.alert.dao.AlertDao;
+import org.apache.hertzbeat.alert.dto.AlertPriorityNum;
+import org.apache.hertzbeat.alert.dto.TenCloudAlertReport;
+import org.apache.hertzbeat.alert.reduce.AlarmCommonReduce;
+import org.apache.hertzbeat.alert.service.impl.AlertServiceImpl;
+import org.apache.hertzbeat.common.entity.alerter.Alert;
+import org.apache.hertzbeat.common.entity.dto.AlertReport;
+import org.apache.hertzbeat.common.util.JsonUtil;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-
-import org.mockito.junit.jupiter.MockitoExtension;
-
 import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.Specification;
@@ -67,6 +71,31 @@ class AlertServiceTest {
 
     @Test
     void getAlerts() {
+        // Parâmetros de entrada
+        List<Long> alarmIds = List.of(1L, 2L, 3L);
+        Long monitorId = 1L;
+        Byte priority = 1;
+        Byte status = 0;
+        String content = "Test content";
+        String sort = "priority";
+        String order = "desc";
+        int pageIndex = 0;
+        int pageSize = 10;
+
+        // Cria um mock para Page<Alert>
+        Page<Alert> mockPage = Mockito.mock(Page.class);
+        // Configura o comportamento do DAO: findAll retorna o mockPage
+        when(alertDao.findAll(any(Specification.class), any(PageRequest.class))).thenReturn(mockPage);
+
+        // Chama o método a ser testado
+        Page<Alert> result = alertService.getAlerts(alarmIds, monitorId, priority, status, content, sort, order, pageIndex, pageSize);
+
+        // Verifica se o resultado não é nulo e se é o mesmo objeto retornado pelo DAO
+        assertNotNull(result);
+        assertEquals(mockPage, result);
+
+        // Verifica que o método findAll foi invocado corretamente
+        verify(alertDao, times(1)).findAll(any(Specification.class), any(PageRequest.class));
     }
 
 
