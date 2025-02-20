@@ -31,7 +31,6 @@ import org.junit.jupiter.api.Test;
  */
 class AesUtilTest {
 
-    private static final String ALGORITHM_STR = "AES/CBC/PKCS5Padding";
 
     private static final String AES = "AES";
 
