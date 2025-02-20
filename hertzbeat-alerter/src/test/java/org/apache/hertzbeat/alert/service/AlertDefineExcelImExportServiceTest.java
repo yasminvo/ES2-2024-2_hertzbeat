@@ -50,10 +50,9 @@ public class AlertDefineExcelImExportServiceTest {
     private AlertDefineExcelImExportServiceImpl alertDefineExcelImExportService;
 
     private Workbook workbook;
-    private Sheet sheet;
 
     @BeforeEach
-    public void setUp() throws IOException {
+    void setUp() throws IOException {
 
         Workbook initialWorkbook = WorkbookFactory.create(true);
         Sheet initialSheet = ExcelExportUtils.setSheet("Test sheet", initialWorkbook, AlertDefineDTO.class);
@@ -78,7 +77,7 @@ public class AlertDefineExcelImExportServiceTest {
     }
 
     @Test
-    public void testParseImport() throws IOException {
+    void testParseImport() throws IOException {
 
         try (ByteArrayInputStream inputStream = new ByteArrayInputStream(toByteArray(workbook))) {
             List<ExportAlertDefineDTO> result = alertDefineExcelImExportService.parseImport(inputStream);
@@ -101,7 +100,7 @@ public class AlertDefineExcelImExportServiceTest {
     }
 
     @Test
-    public void testWriteOs() throws IOException {
+    void testWriteOs() throws IOException {
 
         List<ExportAlertDefineDTO> exportAlertDefineList = new ArrayList<>();
         ExportAlertDefineDTO exportAlertDefineDTO = new ExportAlertDefineDTO();
